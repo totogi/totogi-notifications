@@ -1,0 +1,45 @@
+service: emulator-notifications
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  region: us-west-2
+  profile: igotot-wireless
+  runtime: python3.8
+  environment:
+    DYNAMODB_TABLE: emulator-notifications-${sls:stage}
+  httpApi:
+    cors: true
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:PutItem
+          Resource:
+            - "arn:aws:dynamodb:${aws:region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
+
+functions:
+  getNotifications:
+    handler: src/get_notifications.handler
+    events:
+      - httpApi:
+          path: /notifications
+          method: get
+  processNotifications:
+    handler: src/process_notifications.handler
+    events:
+      - eventBridge:
+          eventBus: arn:aws:events:us-west-2:192911284903:event-bus/EB-Totogi-igototwireless
+          pattern:
+           account:
+             - "266643203619"
+
+resources:
+  - ${file(resources/dynamodb.yml)}
+
+package:
+  patterns:
+    - '!venv/**'
+    - '!node_modules/**'
