@@ -52,7 +52,7 @@
     "cloudwatchLogsGroupTotogiNotification": {
       "Type" : "AWS::Logs::LogGroup",
       "Properties" : {
-          "LogGroupName" : "cloudwatchLogsGroupTotogiNotification",
+          "LogGroupName" : "/aws/events/cloudwatchLogsGroupTotogiNotification",
           "RetentionInDays" : 14
         }
     },
