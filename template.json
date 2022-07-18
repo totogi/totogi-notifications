@@ -1,0 +1,86 @@
+{
+  "Parameters" : {
+    "EventBusNameParameter" : {
+      "Type" : "String",
+      "Default" : "totogiNotifications"
+    }
+  },
+  "Resources": {
+    "eventBusTotogiResource": {
+      "Type" : "AWS::Events::EventBus",
+      "Properties" : {
+        "Name" : { "Ref" : "EventBusNameParameter" }
+      }
+    },
+    "eventArchiveTotogi": {
+      "Type" : "AWS::Events::Archive",
+      "Properties" : {
+        "ArchiveName" : "eventArchive",
+        "EventPattern" : {
+          "account": [
+            "266643203619"
+          ]
+        },
+        "SourceArn" : {
+          "Fn::GetAtt": [
+            "eventBusTotogiResource",
+            "Arn"
+          ]
+        }
+      }
+    },
+    "eventBusPolicyTotogi": {
+      "Type" : "AWS::Events::EventBusPolicy",
+      "Properties" : {
+        "EventBusName" : {
+          "Ref" : "EventBusNameParameter"
+        },
+        "Statement" : {
+          "Effect": "Allow",
+          "Principal": {"AWS": "arn:aws:iam::266643203619:root"},
+          "Action": "events:PutEvents",
+          "Resource": {
+            "Fn::GetAtt": [
+              "eventBusTotogiResource",
+              "Arn"
+            ]
+          }
+        },
+        "StatementId" : "allow_account_to_put_events"
+      }
+    },
+    "cloudwatchLogsGroupTotogiNotification": {
+      "Type" : "AWS::Logs::LogGroup",
+      "Properties" : {
+          "LogGroupName" : "cloudwatchLogsGroupTotogiNotification",
+          "RetentionInDays" : 14
+        }
+    },
+    "EmulatornotificationsprodprocessNotificationsrule1EventBridgeRule": {
+      "Type": "AWS::Events::Rule",
+      "Properties": {
+        "EventBusName": {
+          "Ref" : "EventBusNameParameter"
+        },
+        "EventPattern": {
+          "account": [
+            "266643203619"
+          ]
+        },
+        "Name": "cloudwatchLogsRuleForTotogiNotification",
+        "State": "ENABLED",
+        "Targets": [
+          {
+            "Arn": {
+              "Fn::GetAtt": [
+                "cloudwatchLogsGroupTotogiNotification",
+                "Arn"
+              ]
+            },
+            "Id": "cloudwatchLogsGroupTotogiNotificationTargetId1"          
+          }
+        ]
+      }
+    }
+  }
+}
