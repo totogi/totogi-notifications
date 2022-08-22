@@ -19,9 +19,9 @@ def handler(event, context):
 
 
 def handle_threshold(threshold_event):
-    provider_id: str = threshold_event['detail']['provider']
-    account_id: str = threshold_event['detail']['account']
-    counter_type: str = threshold_event['detail']['counter']
+    provider_id: str = threshold_event['detail']['providerid']
+    account_id: str = threshold_event['detail']['eventdata']['accountid']
+    counter_type: str = threshold_event['detail']['eventdata']['notificationinformation']['name']
     
     if counter_type == 'AllowanceThresholdVoice':
         record_notification('voice', account_id, provider_id)
@@ -33,9 +33,11 @@ def handle_threshold(threshold_event):
 
 def event_is_threshold(event) -> bool:
     detail = event.get('detail', {})
-    counter_type = detail.get('counter', '')
-    state = detail.get('state', '')
-    if 'AllowanceThreshold' in counter_type and state == 'low':
+    event_data = detail.get('eventdata', '')
+    notificationinformation = event_data.get('notificationinformation', '')
+    event_name = notificationinformation.get('name', '')
+    event_state = notificationinformation.get('state', '')
+    if 'AllowanceThreshold' in event_name and event_state == 'low':
         return True
     return False
 
