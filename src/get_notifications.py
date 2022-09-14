@@ -20,8 +20,8 @@ class DecimalEncoder(json.JSONEncoder):
 def handler(event, context):
     print(event)
     provider_id: str = event['queryStringParameters']['providerId']
-    account_device_id: str = event['queryStringParameters']['deviceId']
-    pk = Key('pk').eq(f'PROVIDER#{provider_id}#ACCOUNT#{account_device_id}')
+    account_id: str = event['queryStringParameters']['accountId']
+    pk = Key('pk').eq(f'PROVIDER#{provider_id}#ACCOUNT#{account_id}')
     sk = Key('sk').begins_with('TYPE#THRESHOLD#')
     expression = pk & sk
     items = table.query(
