@@ -23,11 +23,11 @@ def handle_threshold(threshold_event):
     account_id: str = threshold_event['detail']['eventdata']['accountid']
     counter_type: str = threshold_event['detail']['eventdata']['notificationinformation']['name']
     
-    if counter_type == 'AllowanceThresholdVoice':
+    if 'AllowanceThresholdVoice' in counter_type:
         record_notification('voice', account_id, provider_id)
-    if counter_type == 'AllowanceThresholdText':
+    if 'AllowanceThresholdText' in counter_type:
         record_notification('text', account_id, provider_id)
-    if counter_type == 'AllowanceThresholdData':
+    if  'AllowanceThresholdData' in counter_type:
         record_notification('data', account_id, provider_id)
 
 
