@@ -4,4 +4,4 @@ This service is used by the Totogi Emulator to process, store, and make accessib
 
 ### Architecture
 
-![Totogi Notifications Lucidchart](https://user-images.githubusercontent.com/9443275/216627268-c381a7f9-168c-45b2-b66c-50690a0b2a35.png)
+![Totogi Notifications Lucidchart](https://user-images.githubusercontent.com/9443275/216628187-1259dbc1-9b02-4ee1-ac30-be3e68d2ebbe.png)
