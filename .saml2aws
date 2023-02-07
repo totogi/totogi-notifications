@@ -1,0 +1,23 @@
+[default]
+name                    = default
+app_id                  = 
+url                     = https://devfactory.devconnect-df.com/auth/realms/devfactory/protocol/saml/clients/aws
+username                = nikhilmathugar
+provider                = KeyCloak
+mfa                     = Auto
+skip_verify             = false
+timeout                 = 0
+aws_urn                 = urn:amazon:webservices
+aws_session_duration    = 3600
+resource_id             = 
+subdomain               = 
+role_arn                = 
+http_attempts_count     = 
+http_retry_delay        = 
+credentials_file        = 
+saml_cache              = false
+saml_cache_file         = 
+target_url              = 
+disable_remember_device = false
+disable_sessions        = false
+prompter                = 
