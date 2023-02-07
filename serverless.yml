@@ -9,6 +9,13 @@ provider:
   environment:
     DYNAMODB_TABLE: emulator-notifications-${sls:stage}
   httpApi:
+    authorizers:
+      cognitoUserPoolCcb:
+        type: jwt
+        identitySource: $request.header.Authorization
+        issuerUrl: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_bYrFO4DaR
+        audience:
+          - 3bsr3p2j5ffn1cf05knuqc03v2
     cors: true
   iam:
     role:
@@ -27,6 +34,8 @@ functions:
       - httpApi:
           path: /notifications
           method: get
+          authorizer:
+            name: cognitoUserPoolCcb
   processNotifications:
     handler: src/process_notifications.handler
     events:
