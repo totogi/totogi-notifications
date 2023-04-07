@@ -13,9 +13,9 @@ provider:
       cognitoUserPoolCcb:
         type: jwt
         identitySource: $request.header.Authorization
-        issuerUrl: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_bYrFO4DaR
+        issuerUrl: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_foZ45Yf8D
         audience:
-          - 3bsr3p2j5ffn1cf05knuqc03v2
+          - 58jcnn51q51crrlmvrque7q0du
     cors: true
   iam:
     role:
@@ -46,7 +46,8 @@ functions:
              - "266643203619"
 
 resources:
-  - ${file(resources/dynamodb.yml)}
+  Resources:
+    notificationsTable: ${file(resources/dynamodb.yml)}
 
 package:
   patterns:
