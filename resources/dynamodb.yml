@@ -1,21 +1,19 @@
-Resources:
-  notificationsTable:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      TableName: ${self:provider.environment.DYNAMODB_TABLE}
-      AttributeDefinitions:
-        - AttributeName: pk
-          AttributeType: S
-        - AttributeName: sk
-          AttributeType: S
-      KeySchema:
-        - AttributeName: pk
-          KeyType: HASH
-        - AttributeName: sk
-          KeyType: RANGE
-      ProvisionedThroughput:
-        ReadCapacityUnits: 5
-        WriteCapacityUnits: 5
-      TimeToLiveSpecification:
-          AttributeName: expireAtEpochSeconds
-          Enabled: True
+Type: AWS::DynamoDB::Table
+Properties:
+  TableName: ${self:provider.environment.DYNAMODB_TABLE}
+  AttributeDefinitions:
+    - AttributeName: pk
+      AttributeType: S
+    - AttributeName: sk
+      AttributeType: S
+  KeySchema:
+    - AttributeName: pk
+      KeyType: HASH
+    - AttributeName: sk
+      KeyType: RANGE
+  ProvisionedThroughput:
+    ReadCapacityUnits: 5
+    WriteCapacityUnits: 5
+  TimeToLiveSpecification:
+      AttributeName: expireAtEpochSeconds
+      Enabled: True
