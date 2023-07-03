@@ -19,10 +19,19 @@ class DecimalEncoder(json.JSONEncoder):
 
 def handler(event, context):
     print(event)
-    provider_id: str = event['queryStringParameters']['providerId']
+    provider_id: str = event['queryStringParameters'].get('providerId')
     account_id: str = event['queryStringParameters']['accountId']
-    pk = Key('pk').eq(f'PROVIDER#{provider_id}#ACCOUNT#{account_id}')
-    sk = Key('sk').begins_with('TYPE#THRESHOLD#')
+    device_id: str = event['queryStringParameters'].get('deviceId')
+    if provider_id:
+      print('Using provider ID')
+      pk = Key('pk').eq(f'PROVIDER#{provider_id}#ACCOUNT#{account_id}')
+      sk = Key('sk').begins_with('TYPE#THRESHOLD#')
+    else:
+      print('Without provider ID')
+      pk = Key('pk').eq(f'ACCOUNT#{account_id}#DEVICE#{device_id}')
+      sk = Key('sk').begins_with('TYPE#FAIRUSAGE#')
+    print(pk.get_expression())
+    print(sk.get_expression())
     expression = pk & sk
     items = table.query(
         KeyConditionExpression=expression
