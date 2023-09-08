@@ -26,19 +26,39 @@ def handler(event, context):
       print('Using provider ID')
       pk = Key('pk').eq(f'PROVIDER#{provider_id}#ACCOUNT#{account_id}')
       sk = Key('sk').begins_with('TYPE#THRESHOLD#')
+      print(pk.get_expression())
+      print(sk.get_expression())
+      expression = pk & sk
+      items = table.query(
+          KeyConditionExpression=expression
+      )['Items']
+      return {
+          'statusCode': 200,
+          'body': json.dumps({
+              'items': items
+          }, cls=DecimalEncoder)
+      }
     else:
       print('Without provider ID')
       pk = Key('pk').eq(f'ACCOUNT#{account_id}#DEVICE#{device_id}')
       sk = Key('sk').begins_with('TYPE#FAIRUSAGE#')
-    print(pk.get_expression())
-    print(sk.get_expression())
-    expression = pk & sk
-    items = table.query(
-        KeyConditionExpression=expression
-    )['Items']
-    return {
-        'statusCode': 200,
-        'body': json.dumps({
-            'items': items
-        }, cls=DecimalEncoder)
-    }
+      print(pk.get_expression())
+      print(sk.get_expression())
+      expression = pk & sk
+      items = table.query(
+          KeyConditionExpression=expression
+      )['Items']
+      pk = Key('pk').eq(f'ACCOUNT#{account_id}#DEVICE#{device_id}')
+      sk = Key('sk').begins_with('TYPE#STREAMING#')
+      print(pk.get_expression())
+      print(sk.get_expression())
+      expression = pk & sk
+      items.extend(table.query(
+          KeyConditionExpression=expression
+      )['Items'])
+      return {
+          'statusCode': 200,
+          'body': json.dumps({
+              'items': items
+          }, cls=DecimalEncoder)
+      }
