@@ -37,7 +37,7 @@ def event_is_threshold(event) -> bool:
     notificationinformation = event_data.get('notificationinformation', '')
     event_name = notificationinformation.get('name', '')
     event_state = notificationinformation.get('state', '')
-    if 'AllowanceThreshold' in event_name and event_state == 'low':
+    if 'AllowanceThreshold' in event_name and (event_state == 'low' or 'warning' in event_state):
         return True
     return False
 

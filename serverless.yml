@@ -10,12 +10,10 @@ provider:
     DYNAMODB_TABLE: emulator-notifications-${sls:stage}
   httpApi:
     authorizers:
-      cognitoUserPoolCcb:
-        type: jwt
-        identitySource: $request.header.Authorization
-        issuerUrl: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_foZ45Yf8D
-        audience:
-          - 58jcnn51q51crrlmvrque7q0du
+      lambdaAuthorizer:
+        type: request
+        enableSimpleResponses: true
+        functionName: authorizerMethod
     cors: true
   iam:
     role:
@@ -33,9 +31,11 @@ functions:
     events:
       - httpApi:
           path: /notifications
-          method: get
+          method: get 
           authorizer:
-            name: cognitoUserPoolCcb
+            name: lambdaAuthorizer
+  authorizerMethod:
+    handler: src/authorizer.handler
   processNotifications:
     handler: src/process_notifications.handler
     events:
@@ -48,6 +48,13 @@ functions:
 resources:
   Resources:
     notificationsTable: ${file(resources/dynamodb.yml)}
+
+plugins:
+  - serverless-python-requirements
+
+custom:
+  pythonRequirements:
+    dockerizePip: true
 
 package:
   patterns:

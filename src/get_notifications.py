@@ -41,7 +41,7 @@ def handler(event, context):
     else:
       print('Without provider ID')
       pk = Key('pk').eq(f'ACCOUNT#{account_id}#DEVICE#{device_id}')
-      sk = Key('sk').begins_with('TYPE#FAIRUSAGE#')
+      sk = Key('sk').eq('TYPE#FAIRUSAGE')
       print(pk.get_expression())
       print(sk.get_expression())
       expression = pk & sk
@@ -49,7 +49,7 @@ def handler(event, context):
           KeyConditionExpression=expression
       )['Items']
       pk = Key('pk').eq(f'ACCOUNT#{account_id}#DEVICE#{device_id}')
-      sk = Key('sk').begins_with('TYPE#STREAMING#')
+      sk = Key('sk').eq('TYPE#STREAMING')
       print(pk.get_expression())
       print(sk.get_expression())
       expression = pk & sk
