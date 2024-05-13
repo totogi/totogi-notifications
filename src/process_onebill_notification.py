@@ -1,6 +1,7 @@
 import os
 import boto3
 from datetime import datetime
+from boto3.dynamodb.conditions import Key
 import numbers
 
 def is_number(value):
@@ -69,17 +70,21 @@ def event_is_threshold(event) -> bool:
 
 
 def record_notification(threshold_type: str, account: str, provider: str):
-    print('Recording notification for ' + threshold_type + ' for account ' + account)
-    message = f'NOTIFICATION: Threshold {threshold_type}.'
-    now = datetime.now()
-    now_timestamp = now.isoformat()[:-4]+'Z'
-    now_epoch = int(now.timestamp())
-    item = {
-        'pk': f'PROVIDER#{provider}#ACCOUNT#{account}',
-        'sk': 'TYPE#THRESHOLD#TIMESTAMP#' + now_timestamp,
-        'message': message,
-        'thresholdType': threshold_type,
-        'timestamp': now_timestamp,
-        'expireAtEpochSeconds': now_epoch + DAY * 30
-    }
-    table.put_item(Item=item)
+    pk = Key('pk').eq('ONEBILL_NOTIFICATION')
+    sk = Key('sk').eq(f'PROVIDER#{provider}#ACCOUNT#{account}')
+    print(pk.get_expression())
+    print(sk.get_expression())
+    expression = pk & sk
+    items = table.query(
+        KeyConditionExpression=expression
+    )['Items']
+    if len(items) < 1:
+        print("One bill not found for provider " + provider + " account " + account)
+        return
+
+    item = items[0]
+    if item['enabled']:
+        print("One bill enabled for provider - making API call" + provider + " account " + account)
+        return
+
+    print("One bill not enabled for provider " + provider + " account " + account)

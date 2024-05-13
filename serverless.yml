@@ -42,8 +42,18 @@ functions:
       - eventBridge:
           eventBus: arn:aws:events:us-west-2:192911284903:event-bus/EB-Totogi-igototwireless
           pattern:
-           account:
-             - "266643203619"
+            account:
+              - "266643203619"
+              - "799148289882"
+  processOnebillNotifications:
+    handler: src/process_onebill_notifications.handler
+    events:
+      - eventBridge:
+          eventBus: arn:aws:events:us-west-2:192911284903:event-bus/EB-Totogi-igototwireless
+          pattern:
+            account:
+              - "266643203619"
+              - "799148289882"
 
 resources:
   Resources:
